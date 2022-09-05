@@ -1,0 +1,8 @@
+# common parameters
+client_id: YOUR_CLIENT_ID
+client_secret: YOUR_CLIENT_SECRET
+redirect_uri: http://localhost:5050/callback
+
+# authorization parameters
+state: abc
+scope: https://www.googleapis.com/auth/photoslibrary.readonly
