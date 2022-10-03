@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>{{ title }} Test</title>
+    </head>
+    <body>
+        <h1>{{ title }} Test</h1>
+		
+		{% if username == None %}
+			<a href="{{url}}?{{ params }}">Log In</a>
+		{% else %}
+			<span>{{username}}</span> <a href="/logout">Log Out</a>
+		{% endif %}
+
+    </body>
+</html>

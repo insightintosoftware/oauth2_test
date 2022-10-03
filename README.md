@@ -15,9 +15,10 @@
    1. Run `git clone https://github.com/insightintosoftware/oauth2_test.git`
    2. Run `cd oauth2_test`
    3. Run `python -m venv .` 
-   4. Run `pip install -r requirements.txt`
-   5. Run `python app.py`
-   6. In your browser, go to `http://localhost:5050`. If you see "OAuth2 Test" page, you are good for now.
+   4. Run `Scripts\activate`
+   5. Run `pip install -r requirements.txt`
+   6. Run `python app.py`
+   7. In your browser, go to `http://localhost:5050`. If you see "OAuth2 Test" page, you are good for now.
 2. Go to Google Cloud APIs & Services page(https://console.cloud.google.com/apis/credentials)
    1. Create a new project.
    2. We'll use Google Photos Library for this demo.

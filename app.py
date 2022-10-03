@@ -1,11 +1,16 @@
-from flask import render_template
-from flask import Flask, request
+from flask import render_template, session
+from flask import Flask, request, redirect, url_for
+from flask_session import Session
 import requests
 import urllib
 import yaml
 import json
+import jwt
 
 app = Flask(__name__)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 with open("appsettings.yaml", 'r') as ymlfile:
     config = yaml.full_load(ymlfile)
@@ -44,6 +49,11 @@ def callback():
     with open("tokens.yaml", "w", encoding='utf-8') as f:
         yaml.dump(parsed, f)
 
+    if "id_token" in parsed:
+        token = jwt.decode(parsed["id_token"], options={"verify_signature": False})
+        session['username'] = token["email"]
+        return redirect(url_for('oidc'))
+
     return render_template('result.html', title='OAuth2', result=parsed)
 
 @app.route('/getalbum')
@@ -75,6 +85,27 @@ def getphoto():
     print(resp.text)
     content = json.loads(resp.text)
     return '<img src="' + content["mediaItems"][0]["baseUrl"] + '" />'
+
+
+@app.route('/oidc')
+def oidc():
+    username = None
+    if 'username' in session:
+        username = session['username']
+    
+    url = "https://accounts.google.com/o/oauth2/auth"
+    params = {
+        'redirect_uri': config['redirect_uri'],
+        'state': config['state'],
+        'client_id': config['client_id'],
+        'response_type': 'code',
+        'scope': config['scope']}
+    return render_template('oidc.html', title='OpenId Connect', url=url, params=urllib.parse.urlencode(params), username = username)
+
+@app.route('/logout')
+def logout():
+    session['username'] = None
+    return redirect(url_for('oidc'))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050)
